@@ -31,5 +31,14 @@ services:
             - ./dist:/var/www/html/
         networks:
             - default
+    tests:
+        build: ./.docker/tests
+        depends_on:
+            - mysql
+        environment:
+            - COMPOSER_CACHE_DIR=/host_shared_cache/var/cache/composer
+        volumes:
+            - ./.docker/tests/cache:/host_shared_cache
+            - ./:/var/www/html/
 networks:
     default:

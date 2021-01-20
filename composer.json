@@ -1,0 +1,20 @@
+{
+    "name": "willy/payment",
+    "description": "A reference project",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Bennet Breitfeld",
+            "email": "bennetbreitfeld@googlemail.com"
+        }
+    ],
+    "config": {
+        "vendor-dir": "/host_shared_cache/vendor"
+    },
+    "autoload": {
+        "psr-4": {"": "dist/src"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
+}

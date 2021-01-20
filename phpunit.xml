@@ -1,0 +1,10 @@
+<phpunit bootstrap="dist/autoload.php" testdox="true" cacheResultFile="/host_shared_cache/.phpunit.result.cache">
+    <php>
+        <server name="DOCUMENT_ROOT" value="/var/www/html/dist/"/>
+    </php>
+    <testsuites>
+        <testsuite name="payment">
+            <directory phpVersion="8.0.0">tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
