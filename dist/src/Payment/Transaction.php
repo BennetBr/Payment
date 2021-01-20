@@ -113,7 +113,22 @@ class Transaction {
 
     public static function getAllFor (int $accountID): array {
         $stmt = Connection::getInstance()
-            ->prepare("SELECT transactions.id AS id, transactions.amount AS amount, transactions.timestamp AS timestamp, transactions.account_from AS account_from_id, transactions.account_to AS account_to_id, IFNULL(CONCAT(f.firstname, '', f.lastname), NULL) AS account_from, IFNULL(CONCAT(t.firstname, ' ', t.lastname), NULL) AS account_to FROM `transactions` LEFT JOIN `accounts` AS f ON `transactions`.account_from = f.id LEFT JOIN `accounts` AS t ON `transactions`.account_to = t.id WHERE account_from = :id OR account_to = :id;");
+            ->prepare("SELECT transactions.id AS id,
+                    transactions.amount AS amount,
+                    UNIX_TIMESTAMP(transactions.timestamp) AS timestamp,
+                    transactions.account_from AS account_from_id,
+                    transactions.account_to AS account_to_id,
+                    IFNULL(
+                        CONCAT(f.firstname, ' ', f.lastname), NULL
+                    ) AS account_from,
+                    IFNULL(
+                        CONCAT(t.firstname, ' ', t.lastname), NULL
+                    ) AS account_to
+                FROM `transactions`
+                LEFT JOIN `accounts` AS f ON `transactions`.account_from = f.id
+                LEFT JOIN `accounts` AS t ON `transactions`.account_to = t.id
+                WHERE account_from = :id OR account_to = :id
+                ORDER BY transactions.timestamp DESC;");
         $stmt->execute([
             "id" => $accountID
         ]);

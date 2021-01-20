@@ -23,6 +23,9 @@ try{
                 "transactions" => Transaction::getAllFor((int) $_GET["id"])
             ];
             break;
+        case "create_new_account":
+            Account::create($_GET["first_name"], $_GET["last_name"]);
+            break;
         case "change_first_name":
             Account::getFromID((int) $_GET["id"])
                 ->setFirstName($_GET["first_name"]);

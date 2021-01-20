@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import collapse from 'bootstrap';
 
 const apiBasePath = "API.php";
 
@@ -9,7 +10,6 @@ function updateAccountList (){
     $.ajax({
         url: `${apiBasePath}?resource=get_all_accounts`
     }).done((data) => {
-        console.log(data);
         let $list = $("#account-list")
             .empty();
         let $transferSelect = $('#account-info select[name="transfer-target"')
@@ -17,9 +17,9 @@ function updateAccountList (){
         data.content.map((account) => {
             accounts.push(account);
             $list.append(
-                $(`<li>${account.firstname} ${account.lastname}</li>`)
-                    .addClass("account")
-                    .data("id", account.id)
+                $(`<button>${account.firstname} ${account.lastname}</button>`)
+                    .addClass("list-group-item list-group-item-action")
+                    .attr("data-id", account.id)
             )
             $transferSelect.append(`<option value="${account.id}">${account.firstname} ${account.lastname}</option>`);
         });
@@ -33,10 +33,15 @@ $(()=>{
 
 function selectAccount (accountID){
     currentAccountID = accountID;
+    $("#account-list > *")
+        .removeClass("active")
+        .filter(`[data-id="${accountID}"]`)
+            .addClass("active");
+    $("#account-info > .collapse, #account-transactions > .collapse")
+        .collapse("show");
     $.ajax({
         url: `${apiBasePath}?resource=get_account&id=${accountID}`
     }).done((data) => {
-        console.log(data);
         let $account = $("#account-info");
 
         for (name in data.content.account){
@@ -57,11 +62,13 @@ function selectAccount (accountID){
 
             let cls = (
                 transaction.account_from_id == data.content.account.id
-                ? "bg-danger" : "bg-success"
+                ? "table-danger" : "table-success"
             );
 
-            $transactions.prepend(
-                `<tr class="${cls}"><td>${transaction.amount}</td>`
+            let date = new Date(Date(transaction.timestamp));
+            $transactions.append(
+                `<tr class="${cls}"><td>${date.toLocaleDateString()} - ${date.toLocaleTimeString()}</td>`
+                +`<td>${transaction.amount}<span class="monetary"></span></td>`
                 +`<td>${transaction.account_from}</td>`
                 +`<td>${transaction.account_to}</td></tr>`
             );
@@ -71,7 +78,7 @@ function selectAccount (accountID){
 
 $("#account-list").on("click", (event)=>{
     selectAccount (
-        $(event.target).data("id")
+        $(event.target).attr("data-id")
     );
 })
 
@@ -84,17 +91,24 @@ function requestAction (action, parameters){
     $.ajax({
         url: `${apiBasePath}?resource=${query}`
     }).done((data) => {
-        console.log(data);
         //Refresh selected account
         selectAccount(currentAccountID);
         if (
             action == "change_first_name"
             || action == "change_last_name"
+            || action == "create_new_account"
         ){
             updateAccountList();
         }
     });
 }
+
+$("#create-new-account").on("click", (event)=>{
+    requestAction("create_new_account", {
+        "first_name": $("#new-account-first-name").val(),
+        "last_name": $("#new-account-last-name").val()
+    });
+});
 
 $("#change-first-name").on("click", (event)=>{
     requestAction("change_first_name", {

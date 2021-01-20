@@ -2,11 +2,15 @@ h1, h2, h3 {
     text-align: center;
 }
 
-.account:hover {
+#account-list > :not(.active):hover {
     cursor: pointer;
-    text-decoration: underline;
+    background-color: #F0F0F0
 }
 
 #account-info > div {
     margin-bottom: 0.5em;
+}
+
+.flex {
+    display: flex;
 }
