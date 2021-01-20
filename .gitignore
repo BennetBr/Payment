@@ -1,3 +1,5 @@
 .vscode
 .docker/mysql/data
 .docker/tests/cache
+
+node_modules
