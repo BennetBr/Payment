@@ -31,6 +31,10 @@ class Transaction {
         return new static (NULL, $from, $to, $amount, false, NULL);
     }
 
+    public function getID (): ?int {
+        return $this->id;
+    }
+
     public function getFromAccount (): ?Account {
         return $this->from;
     }
@@ -97,26 +101,24 @@ class Transaction {
         }
     }
 
-    public static function getAllTransactionsFor (Account $account): array {
+    public function toArray (): array {
+        return [
+            "id" => $this->getID(),
+            "account_from" => $this->getFromAccount(),
+            "account_to" => $this->getToAccount(),
+            "amount" => $this->getAmount(),
+            "timestamp" => $this->getTimestamp()
+        ];
+    }
+
+    public static function getAllFor (int $accountID): array {
         $stmt = Connection::getInstance()
-            ->prepare("SELECT * FROM `transactions` WHERE account_from = :id OR account_to = :id;");
+            ->prepare("SELECT transactions.id AS id, transactions.amount AS amount, transactions.timestamp AS timestamp, transactions.account_from AS account_from_id, transactions.account_to AS account_to_id, IFNULL(CONCAT(f.firstname, '', f.lastname), NULL) AS account_from, IFNULL(CONCAT(t.firstname, ' ', t.lastname), NULL) AS account_to FROM `transactions` LEFT JOIN `accounts` AS f ON `transactions`.account_from = f.id LEFT JOIN `accounts` AS t ON `transactions`.account_to = t.id WHERE account_from = :id OR account_to = :id;");
         $stmt->execute([
-            "id" => $account->getID()
+            "id" => $accountID
         ]);
 
-        $transactions = [];
-
-        while ($transaction = $stmt->fetch(\PDO::FETCH_ASSOC)){
-            $transactions[] = new static (
-                $transaction["id"],
-                $transaction["account_from"],
-                $transaction["account_to"],
-                $transaction["amount"],
-                true,
-                $transaction["timestamp"]
-            );
-        }
-        return $transactions;
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
 

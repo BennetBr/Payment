@@ -1,0 +1,12 @@
+h1, h2, h3 {
+    text-align: center;
+}
+
+.account:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#account-info > div {
+    margin-bottom: 0.5em;
+}

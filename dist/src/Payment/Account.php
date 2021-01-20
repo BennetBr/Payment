@@ -176,29 +176,6 @@ class Account {
      * 
      * @return array All accounts as an array of accounts.
      */
-    public static function getAllAccounts (): array {
-        $accounts = [];
-        $stmt = Connection::getInstance()
-            ->prepare("SELECT * FROM `accounts`;");
-        $stmt->execute([]);
-
-        while ($accountData = $stmt->fetch(\PDO::FETCH_ASSOC)){
-            $accounts[] = new static (
-                $accountData["id"],
-                $accountData["firstname"],
-                $accountData["lastname"],
-                $accountData["active"] > 0,
-                $accountData["balance"]
-            );
-        }
-        return $accounts;
-    }
-
-    /**
-     * Fetches all accounts from the database.
-     * 
-     * @return array All accounts as an array of accounts.
-     */
     public static function getFromID (int $id): Account {
         $stmt = Connection::getInstance()
             ->prepare("SELECT * FROM `accounts` WHERE id = :id;");
@@ -254,5 +231,28 @@ class Account {
         if ($stmt->rowCount() !== 1){
             throw new \RuntimeException("Error while deleting account $id! Affected {$stmt->rowCount()} rows!");
         }
+    }
+
+    public function toArray (): array {
+        return [
+            "id" => $this->getID(),
+            "firstname" => $this->getFirstName(),
+            "lastname" => $this->getLastName(),
+            "balance" => $this->getBalance(),
+            "active" => $this->isActive()
+        ];
+    }
+
+    /**
+     * Fetches all accounts from the database.
+     * 
+     * @return array All accounts as an array of accounts.
+     */
+    public static function getAllAccounts (): array {
+        $stmt = Connection::getInstance()
+            ->prepare("SELECT * FROM `accounts`;");
+        $stmt->execute([]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
