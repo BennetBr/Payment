@@ -1,5 +1,5 @@
 FROM php:8-fpm-alpine
-LABEL Name=guthand-payment Version=1.0.0
+LABEL Name=payment Version=1.0.0
 RUN apk update; \
     apk upgrade; \
     apk --no-cache add ${PHPIZE_DEPS};
