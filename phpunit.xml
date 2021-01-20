@@ -1,4 +1,4 @@
-<phpunit bootstrap="dist/autoload.php" testdox="true" cacheResultFile="/host_shared_cache/.phpunit.result.cache">
+<phpunit bootstrap="dist/autoload.php" testdox="true">
     <php>
         <server name="DOCUMENT_ROOT" value="/var/www/html/dist/"/>
     </php>

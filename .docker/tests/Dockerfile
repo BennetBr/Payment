@@ -11,4 +11,4 @@ RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql;
 RUN cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini";
 
 WORKDIR /var/www/html/
-CMD composer upgrade && php /host_shared_cache/vendor/bin/phpunit
+CMD composer upgrade && php /host_shared_cache/vendor/bin/phpunit --cache-result-file /host_shared_cache/.phpunit.result.cache
