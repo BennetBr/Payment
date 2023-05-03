@@ -2,7 +2,7 @@ FROM php:8-fpm-alpine
 LABEL Name=payment Version=1.0.0
 RUN apk update; \
     apk upgrade; \
-    apk --no-cache add ${PHPIZE_DEPS};
+    apk --no-cache add linux-headers ${PHPIZE_DEPS};
 
 #Install additional PHP modules
 RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql;
