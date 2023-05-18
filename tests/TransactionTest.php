@@ -28,7 +28,7 @@ final class TransactionTest extends TestCase {
 
     /* ----------------- Transfer ------------------- */
 
-    public function validTransferProvider (): array {
+    public static function validTransferProvider (): array {
         return [
             "100€ - 1€" => [100,1],
             "100€ - 100€" => [100,100],
@@ -62,7 +62,7 @@ final class TransactionTest extends TestCase {
         );
     }
 
-    public function invalidTransferProvider (): array {
+    public static function invalidTransferProvider (): array {
         return [
             "0€ - 0€" => [0,0, \UnderflowException::class],
             "0€ - 300€" => [0,300, OverdrawException::class],
@@ -110,7 +110,7 @@ final class TransactionTest extends TestCase {
 
     /* ----------------- Deposit -------------------- */
 
-    public function validDepositProvider (): array {
+    public static function validDepositProvider (): array {
         return [
             "1€" => [1],
             "100€" => [100],
@@ -133,7 +133,7 @@ final class TransactionTest extends TestCase {
         );
     }
 
-    public function invalidDepositProvider (): array {
+    public static function invalidDepositProvider (): array {
         return [
             "0€" => [0, \UnderflowException::class],
             "6000€" => [6000, \OverflowException::class],
@@ -153,7 +153,7 @@ final class TransactionTest extends TestCase {
 
     /* ----------------- Withdraw -------------------- */
 
-    public function validWithdrawProvider (): array {
+    public static function validWithdrawProvider (): array {
         return [
             "1€ - 1€" => [1, 1],
             "100€ - 100€" => [100, 100],
@@ -180,7 +180,7 @@ final class TransactionTest extends TestCase {
         );
     }
 
-    public function invalidWithdrawProvider (): array {
+    public static function invalidWithdrawProvider (): array {
         return [
             "1€ - 0€" => [1, 0, \UnderflowException::class],
             "1€ - -1€" => [1, -1, \UnderflowException::class],
