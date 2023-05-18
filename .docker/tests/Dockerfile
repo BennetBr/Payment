@@ -2,7 +2,7 @@ FROM php:8-cli-alpine
 LABEL Name=payment-tests Version=1.0.0
 RUN apk update; \
     apk upgrade; \
-    apk --no-cache add composer;
+    apk --no-cache add composer php-dom php-xml php-xmlwriter php-tokenizer;
 
 #Install additional PHP modules
 RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql;
